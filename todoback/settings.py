@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "api",
+    "api", # We need to declare each Django app as an installed app
     "rest_framework",
-    "rest_framework.authtoken",
+    "rest_framework.authtoken", # Alternative to using simplejwt
 ]
 
+# Not there by default, add this section with authentication and permission classes
+# to implement authentication guards or our endpoints
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication"

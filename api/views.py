@@ -15,11 +15,11 @@ from django.shortcuts import get_object_or_404
 def task_create(request):
     data = request.data  # Using DRF's request.data to handle the incoming JSON data
 
-    new_task = Task.objects.create(
+    new_task = Task.objects.create( # Use the model's built-in objects.create() function to store an instance of said object in DB
         title=data["title"],
         completed=data.get("completed", False)  # Use `.get()` to provide a default value
     )
-    return Response({
+    return Response({ # We use Response instead of JsonResponse() because we're using DRF
         "id": new_task.id,
         "title": new_task.title,
         "completed": new_task.completed
@@ -53,9 +53,10 @@ def task_update(request, pk):
     task = get_object_or_404(Task, pk=pk)
     data = request.data
 
+    # Get the new values for each attribute, use the old ones if no new value provided
     task.title = data.get("title", task.title)
     task.completed = data.get("completed", task.completed)
-    task.save()
+    task.save() # Then save the updated task
 
     return Response({
         "id": task.id,
@@ -79,11 +80,11 @@ def task_delete(request, pk):
 @permission_classes([AllowAny])
 def register_view(request):
     data = request.data
-    username = request.data.get("username")
-    password = request.data.get("password")
+    username = data.get("username")
+    password = data.get("password")
 
     # Check if the given user already exists
-    if User.objects.filter(username=username).exists():
+    if User.objects.filter(username=username).exists(): # The status code below could just be "400" instead but it's less explicit
         return Response({"detail": "Username is already taken"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Create the new user
@@ -103,6 +104,6 @@ def login_view(request):
     user = authenticate(username=data["username"], password=data["password"])
     if user:
         # Create or retrieve the user's token
-        token, created = Token.objects.get_or_create(user=user)
+        token, created = Token.objects.get_or_create(user=user) # Get the token by destructuring
         return Response({"token": token.key})  # Return the token in the response
     return Response({"detail": "Invalid credentials"}, status=401)

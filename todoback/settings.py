@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "api", # We need to declare each Django app as an installed app
     "rest_framework",
     "rest_framework.authtoken", # Alternative to using simplejwt
+    "corsheaders"
 ]
 
 # Not there by default, add this section with authentication and permission classes
@@ -55,6 +56,8 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,6 +66,20 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',  # Replace with your frontend's URL if needed
+]
+
+CORS_ALLOW_CREDENTIALS = True # useful if we need to include tokens into headers
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'accept',
+]
+
 
 ROOT_URLCONF = "todoback.urls"
 

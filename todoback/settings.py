@@ -80,6 +80,8 @@ CORS_ALLOW_HEADERS = [
     'accept',
 ]
 
+# Makes Django more permissive; allows GET calls that do not have the trailing /
+APPEND_SLASH = True
 
 ROOT_URLCONF = "todoback.urls"
 

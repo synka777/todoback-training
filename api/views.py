@@ -30,14 +30,27 @@ def task_create(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def task_list(request):
-    tasks = list(Task.objects.values())  # Get all tasks as a list of dictionaries
-    return Response(tasks)  # DRF's Response is used here instead of JsonResponse
+    if request.method == "GET":
+        # tasks = list(Task.objects.values())  # Get all tasks as a list of dictionaries
+        tasks = Task.objects.all()
+
+        # Get the 'completed' query param
+        completed_param = request.GET.get("completed")
+
+        if completed_param is not None:
+            if completed_param.lower() == "true":
+                tasks = tasks.filter(completed=True)
+            elif completed_param.lower() == "false":
+                tasks = tasks.filter(completed=False)
+
+        return Response(tasks.values())  # DRF's Response is used here instead of JsonResponse
 
 
 # Get a single task by ID
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def task_detail(request, pk):
+    # Just use get_object_or_404() when a query parameter is passed in the URL
     task = get_object_or_404(Task, pk=pk)
     return Response({
         "id": task.id,
